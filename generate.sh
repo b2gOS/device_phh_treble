@@ -15,30 +15,15 @@ fi
 echo 'PRODUCT_MAKEFILES := \' > AndroidProducts.mk
 
 for part in a ab;do
-	for apps in vanilla gapps foss gapps-go;do
+	for apps in vanilla;do
 		for arch in arm64 arm a64;do
-			for su in yes no;do
+			for su in no;do
 				apps_suffix=""
 				apps_script=""
 				apps_name=""
 				extra_packages=""
                 vndk="vndk.mk"
 		optional_base=""
-				if [ "$apps" == "gapps" ];then
-					apps_suffix="g"
-					apps_script='$(call inherit-product, device/phh/treble/gapps.mk)'
-					apps_name="with GApps"
-				fi
-				if [ "$apps" == "gapps-go" ];then
-					apps_suffix="o"
-					apps_script='$(call inherit-product, device/phh/treble/gapps-go.mk)'
-					apps_name="Go"
-				fi
-				if [ "$apps" == "foss" ];then
-					apps_suffix="f"
-					apps_script='$(call inherit-product, vendor/foss/foss.mk)'
-					apps_name="with FOSS apps"
-				fi
 				if [ "$apps" == "vanilla" ];then
 					apps_suffix="v"
 					apps_script=''
@@ -85,6 +70,8 @@ include build/make/target/product/aosp_${baseArch}_ab.mk
 $optional_base
 $apps_script
 $rom_script
+
+\$(call inherit-product, gonk-misc/b2g.mk)
 
 PRODUCT_NAME := $target
 PRODUCT_DEVICE := phhgsi_${arch}_$part
